@@ -190,7 +190,15 @@
             })
         },
         methods: {
-
+            getFormatDecimal(value) {
+                const numericValue = parseFloat(value);
+                if (isNaN(numericValue)) return '0.00';
+                return numericValue.toLocaleString('en-US', {
+                    style: 'decimal',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            },
             clickWarehouseDetail(){
 
                 if(!this.form.item_id){

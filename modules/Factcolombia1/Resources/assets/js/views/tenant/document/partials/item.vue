@@ -370,6 +370,15 @@
                 });
         },
         methods: {
+                getFormatDecimal(value) {
+                const numericValue = parseFloat(value);
+                if (isNaN(numericValue)) return '0.00';
+                return numericValue.toLocaleString('en-US', {
+                    style: 'decimal',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            },
             // Método que se llama cuando se escanea un código de barras
             async handleBarcodeScan() {
                     if (this.barcodeInput) {
@@ -679,9 +688,9 @@
                 }
                 // this.change_price_tax_included()
                 this.form.tax_included_in_price = this.tax_included_in_price
-                console.log(this.form)
-                console.log('✅ ID seleccionado:', this.form.item_id);//pruebas para notas dinamicas en los productos
-                console.log(' Notas del producto:', this.form.notes);
+                //console.log(this.form)
+                //console.log('✅ ID seleccionado:', this.form.item_id);//pruebas para notas dinamicas en los productos
+                //console.log(' Notas del producto:', this.form.notes);
                 this.$emit('add', this.form);
                 if (this.search_item_by_barcode) {
                     this.cleanItems()
@@ -789,6 +798,7 @@
             addRowSelectLot(lots){
                 this.lots = lots
             },
+            
         }
     }
 
