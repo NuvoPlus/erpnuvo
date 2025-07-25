@@ -3,30 +3,23 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class AddNotesToQuotationItemsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-         Schema::table('quotation_items', function (Blueprint $table) {
-            $table->text('notes')->nullable()->default(null);
-        });
+        if (Schema::hasTable('quotation_items') && !Schema::hasColumn('quotation_items', 'notes')) {
+            DB::statement("ALTER TABLE quotation_items ADD COLUMN notes TEXT NULL AFTER tax");
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::table('quotation_items', function (Blueprint $table) {
-            $table->dropColumn('notes');
-        });
+        if (Schema::hasTable('quotation_items') && Schema::hasColumn('quotation_items', 'notes')) {
+            Schema::table('quotation_items', function (Blueprint $table) {
+                $table->dropColumn('notes');
+            });
+        }
     }
 }
