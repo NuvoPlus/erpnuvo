@@ -31,7 +31,7 @@
                                                 Marca: {{option.brand}} <br>
                                                 Categoria: {{option.category}} <br>
                                                 Stock: {{option.stock}} <br>
-                                                Precio: {{option.currency_type_symbol}} {{ getFormatDecimal(option.sale_unit_price) }} <br>
+                                                Precio: {{option.currency_type_symbol}} {{ option.sale_unit_price }} <br>
                                             </div>
 
                                             <el-option  :value="option.id" :label="option.full_description"></el-option>
@@ -64,7 +64,7 @@
                                                 Marca: {{option.brand}} <br>
                                                 Categoria: {{option.category}} <br>
                                                 Stock: {{option.stock}} <br>
-                                                Precio: {{option.currency_type_symbol}} {{ getFormatDecimal(option.sale_unit_price)}} <br>
+                                                Precio: {{option.currency_type_symbol}} {{ option.sale_unit_price }} <br>
                                             </div>
                                             <el-option  :value="option.id" :label="option.full_description"></el-option>
                                         </el-tooltip>
@@ -99,25 +99,15 @@
                             <small class="form-control-feedback" v-if="errors.quantity" v-text="errors.quantity[0]"></small>
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-3">
                         <div class="form-group" :class="{'has-danger': errors.unit_price}">
-                        <label class="control-label">Precio Unitario</label>
-                            <el-input v-model="form.price" @input="calculateQuantity" :readonly="typeUser === ''">
-                                <template slot="prepend" v-if="currencyTypeSymbolActive">{{ currencyTypeSymbolActive }}</template>
+                            <label class="control-label">Precio Unitario</label>
+                            <el-input v-model="form.unit_price" @input="calculateQuantity">
+                                <template slot="prepend" v-if="form.item.currency_type_symbol">{{ form.item.currency_type_symbol }}</template>
                             </el-input>
                             <small class="form-control-feedback" v-if="errors.unit_price" v-text="errors.unit_price[0]"></small>
                         </div>
                     </div>
-                    <div style="padding-top: 1%;" class="col-md-2 col-sm-2" v-if="form.item_id && form.item.lots_enabled && form.lots_group.length > 0">
-                        <a href="#"  class="text-center font-weight-bold text-info" @click.prevent="clickLotGroup">[&#10004; Seleccionar lote]</a>
-                    </div>
-
-                    <div style="padding-top: 1%;" class="col-md-3 col-sm-3" v-if="form.item_id && form.item.series_enabled">
-                        <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
-                        <a href="#"  class="text-center font-weight-bold text-info" @click.prevent="clickSelectLots">[&#10004; Seleccionar series]</a>
-                    </div>
-
-
                     <div class="col-md-3 col-sm-6" v-show="form.item.calculate_quantity">
                         <div class="form-group"  :class="{'has-danger': errors.total_item}">
                             <label class="control-label">Total venta producto</label>
@@ -138,9 +128,8 @@
                             <small class="form-control-feedback" v-if="errors.discount" v-text="errors.discount[0]"></small>
                         </div>
                     </div>
-
+                    
                     <template v-if="!is_client">
-
                         <div class="col-md-12"  v-if="form.item_unit_types.length > 0">
                             <div style="margin:3px" class="table-responsive">
                                 <h5 class="separator-title">

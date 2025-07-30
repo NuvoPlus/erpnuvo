@@ -137,11 +137,11 @@
                                                 </td>
                                                 <td class="text-center">{{ row.item.unit_type.name }}</td>
                                                 <td class="text-right">{{ row.quantity }}</td>
-                                                <td class="text-right">{{ ratePrefix() }}
-                                                    {{ getFormatUnitPriceRow(row.price) }}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.subtotal }}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.discount }}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.total }}</td>
+                                               <td class="text-right">{{ ratePrefix() }}
+                                                    {{ getFormatDecimal(row.price) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.subtotal) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.discount) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.total) }}</td>
                                                 <td class="text-right">
                                                     <button type="button"
                                                         class="btn waves-effect waves-light btn-xs btn-danger"
@@ -274,7 +274,6 @@
   margin-right: 5px;  /* Espacio entre el icono y el texto */
 }
 </style>
-
 <script>
 import PersonForm from '@views/persons/form.vue'
 import { functions, exchangeRate } from '@mixins/functions'
@@ -368,7 +367,7 @@ export default {
             this.showDialogAddItem = true
         },
         getFormatUnitPriceRow(unit_price) {
-            return _.round(unit_price, 6)
+            return _.round(unit_price, 2)
         },
         ediItem(row, index) {
     // Asignamos el índice del ítem que se va a editar

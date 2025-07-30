@@ -137,6 +137,10 @@
             <td class="text-center align-top">{{ $row->item->unit_type->name }}</td>
             <td class="text-left">
                 {!!$row->item->name!!} @if (!empty($row->item->presentation)) {!!$row->item->presentation->description!!} @endif
+                {{-- ✅ Notas del producto justo debajo del nombre --}}
+                @if (!empty($row->notes))
+                    <br/><span style="font-size: 9px; font-style: italic;"> {{ $row->notes }}</span>
+                @endif
                 @if($row->attributes)
                     @foreach($row->attributes as $attr)
                         <br/><span style="font-size: 9px">{!! $attr->description !!} : {{ $attr->value }}</span>
@@ -167,11 +171,11 @@
     @endforeach
         <tr>
             <td colspan="5" class="text-right font-bold">TOTAL VENTA: {{ $document->currency->symbol }}</td>
-            <td class="text-right font-bold">{{ $document->sale }}</td>
+            <td class="text-right font-bold">{{ number_format($document->sale, 2) }}</td>
         </tr>
         <tr >
             <td colspan="5" class="text-right font-bold">TOTAL DESCUENTO (-): {{ $document->currency->symbol }}</td>
-            <td class="text-right font-bold">{{ $document->total_discount }}</td>
+            <td class="text-right font-bold">{{ number_format($document->total_discount, 2) }}</td>
         </tr>
 
         @foreach ($document->taxes as $tax)
@@ -187,7 +191,7 @@
 
         <tr>
             <td colspan="5" class="text-right font-bold">SUBTOTAL: {{ $document->currency->symbol }}</td>
-            <td class="text-right font-bold">{{ $document->subtotal }}</td>
+            <td class="text-right font-bold">{{ number_format($document->subtotal, 2) }}</td>
         </tr>
         <tr>
             <td colspan="5" class="text-right font-bold">TOTAL A PAGAR: {{ $document->currency->symbol }}</td>
