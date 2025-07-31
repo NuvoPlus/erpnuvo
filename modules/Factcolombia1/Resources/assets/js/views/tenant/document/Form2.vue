@@ -236,7 +236,7 @@
                                                             @click.prevent="clickRemoveUser(index)">x</button>
                                                         <button type="button"
                                                             class="btn waves-effect waves-light btn-xs btn-info"
-                                                            @click="clickEditUser(row, index)"><span
+                                                            @click="clickEditUser(row, index)"><span>
                                                                 style='font-size:10px;'>&#9998;</span> </button>
                                                     </td>
                                                 </tr>
@@ -333,7 +333,7 @@
                             </div>
                             <div class="col-md-12" style="display: flex; flex-direction: column; align-items: flex-end;"
                                 v-if="form.items.length > 0">
-                                <table style="margin-top: 10px;">
+                                <table style="margin-top: 10px; width: 460px;>
                                     <tr>
                                         <td>TOTAL VENTA</td>
                                         <td>:</td>
@@ -389,9 +389,9 @@
                                             <!-- <td class="text-right">
                                                 {{ratePrefix()}} {{Number(tax.retention).toFixed(4)}}
                                             </td> -->
-                                            <td class="text-right" width=35%>
-                                                <el-input v-model="tax.retention" readonly>
-                                                    <span slot="prefix" class="c-m-top">{{ ratePrefix() }}</span>
+                                            <td class="text-right" width=40%>
+                                                <el-input :value="formatRetention(tax.retention)" readonly :id="elin">
+                                                    <span id="simbo"slot="prefix" class="c-m-top">{{ ratePrefix() }}</span>
                                                     <i slot="suffix" class="el-input__icon el-icon-delete pointer"
                                                         @click="clickRemoveRetention(index)"></i>
                                                     <!-- <el-button slot="suffix" icon="el-icon-delete" @click="clickRemoveRetention(index)"></el-button> -->
@@ -466,9 +466,18 @@
     display: none;
     /* Oculta los íconos en pantallas grandes */
 }
+.c-m-top{
+    top: 10px !important;   
+}
 .input-discount .el-input__inner {
     text-align: right;
     max-width: 100px;
+}
+#simbo {
+    top: 10px !important;
+}
+.el_input #elin {
+    width: 75% !important;
 }
 .input-discount .el-input__prefix {
     left: 10px;
@@ -857,10 +866,11 @@ export default {
             if ((tax != null) && (!tax.is_fixed_value)) return null;
             return (this.company.currency != null) ? this.company.currency.symbol : '$';
         },
-
+        formatRetention(value) {
+            return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+        },
         keyupCustomer() {
         },
-
         clickAddItemInvoice() {
             this.recordItem = null
             this.showDialogAddItem = true
