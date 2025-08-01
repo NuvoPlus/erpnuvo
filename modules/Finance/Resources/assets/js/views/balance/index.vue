@@ -29,10 +29,10 @@
                             <!-- <td class="text-center">{{row.sale_note_payment}}</td> -->
                             <td class="text-center">{{row.quotation_payment}}</td>
                             <!-- <td class="text-center">{{row.contract_payment}}</td> -->
-                            <td class="text-center">{{row.income_payment}}</td>
-                            <td class="text-center"> {{row.purchase_payment}}</td>
-                            <td class="text-center">{{row.expense_payment}}</td>
-                            <td class="text-center">{{row.balance}}</td> 
+                            <td class="text-center">{{ getFormatDecimal (row.income_payment)}}</td>
+                            <td class="text-center">{{ getFormatDecimal (row.purchase_payment)}}</td>
+                            <td class="text-center">{{ getFormatDecimal (row.expense_payment)}}</td>
+                            <td class="text-center">{{ getFormatDecimal (row.balance)}}</td> 
                         </tr>
                     </data-table>
                 </div>
@@ -57,7 +57,22 @@
         async created() {
         },
         methods: {
-
+            getFormatDecimal(value) {
+            // Convierte la cadena a un número (si es posible)
+            const numericPrice = parseFloat(value);
+            if (isNaN(numericPrice)) {
+                // En caso de que la conversión no sea exitosa, maneja el error como desees
+                console.error('No se pudo convertir la cadena a un número.');
+                return value;
+            }
+            // Asumiendo que numericPrice es un número
+            const formattedPrice = numericPrice.toLocaleString('en-US', {
+                style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            return formattedPrice;
+        },
 
         }
     }

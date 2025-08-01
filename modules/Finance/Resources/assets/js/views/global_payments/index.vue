@@ -32,7 +32,7 @@
                             <td>{{row.date_of_payment}}</td>
                             <td>{{row.payment_method_type_description}}</td>
                             <td>{{row.reference}}</td>
-                            <td>{{row.total}}</td> 
+                            <td>{{ getFormatDecimal(row.total)}}</td> 
                         </tr>
                     </data-table>
 
@@ -59,7 +59,22 @@
         async created() {
         },
         methods: {
-
+            getFormatDecimal(value) {
+            // Convierte la cadena a un número (si es posible)
+            const numericPrice = parseFloat(value);
+            if (isNaN(numericPrice)) {
+                // En caso de que la conversión no sea exitosa, maneja el error como desees
+                console.error('No se pudo convertir la cadena a un número.');
+                return value;
+            }
+            // Asumiendo que numericPrice es un número
+            const formattedPrice = numericPrice.toLocaleString('en-US', {
+                style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            return formattedPrice;
+        },
 
         }
     }

@@ -180,8 +180,8 @@
                                                 </el-popover>
                                             </td>
                                                 <td>{{row.currency_id}}</td>
-                                            <td class="text-right text-danger">{{ row.total_to_pay }}</td>
-                                            <td class="text-right">{{ row.total }}</td>
+                                            <td class="text-right text-danger">{{ getFormatDecimal(row.total_to_pay) }}</td>
+                                            <td class="text-right">{{ getFormatDecimal(row.total) }}</td>
                                             <td class="text-right">
                                                 <template v-if="row.type === 'document'">
                                                 <button
@@ -395,6 +395,23 @@
         },
 
         methods: {
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            },
+
             initForm() {
                 this.form = {
                     establishment_id: null,
