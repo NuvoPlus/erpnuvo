@@ -89,11 +89,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Observaciones</label>
-                                    <el-input
-                                            type="textarea"
-                                            autosize
-                                            :rows="1"
-                                            v-model="form.observation">
+                                    <el-input type="textarea" autosize:rows="1" v-model="form.observation" maxlength="250" show-word-limit>
                                     </el-input>
                                 </div>
                             </div>
@@ -127,11 +123,11 @@
 
                                                 <td class="text-right">{{row.quantity}}</td>
 
-                                                <td class="text-right">{{ratePrefix()}} {{getFormatUnitPriceRow(row.price)}}</td>
+                                                <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(row.price) }}</td>
 
-                                                <td class="text-right">{{ratePrefix()}} {{row.subtotal}}</td>
-                                                <td class="text-right">{{ratePrefix()}} {{ row.discount }}</td>
-                                                <td class="text-right">{{ratePrefix()}} {{row.total}}</td>
+                                                <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(row.subtotal) }}</td>
+                                                <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(row.discount) }}</td>
+                                                <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(row.total) }}</td>
                                                 <td class="text-right">
                                                     <button type="button" class="btn waves-effect waves-light btn-xs btn-danger" @click.prevent="clickRemoveItem(index)">x</button>
                                                     <!-- <button type="button" class="btn waves-effect waves-light btn-xs btn-info" @click="ediItem(row, index)" ><span style='font-size:10px;'>&#9998;</span> </button> -->
@@ -155,12 +151,12 @@
                                     <tr>
                                         <td>TOTAL VENTA</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.sale }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.sale) }}</td>
                                     </tr>
                                     <tr >
                                         <td>TOTAL DESCUENTO (-)</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.total_discount }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.total_discount) }}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.total > 0) && (!tax.is_retention))" :key="index">
@@ -168,13 +164,13 @@
                                                 {{tax.name}}(+)
                                             </td>
                                             <td>:</td>
-                                            <td class="text-right">{{ratePrefix()}} {{Number(tax.total).toFixed(2)}}</td>
+                                            <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(Number(tax.total).toFixed(2))}}</td>
                                         </tr>
                                     </template>
                                     <tr>
                                         <td>SUBTOTAL</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.subtotal }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.subtotal) }}</td>
                                     </tr>
 
                                     <template v-for="(tax, index) in form.taxes">
@@ -194,7 +190,7 @@
                                 </table>
 
                                 <template>
-                                    <h3 class="text-right"><b>TOTAL: </b>{{ratePrefix()}} {{ form.total }}</h3>
+                                    <h3 class="text-right"><b>TOTAL: </b>{{ratePrefix()}} {{ getFormatDecimal(form.total) }}</h3>
                                 </template>
                             </div>
 
@@ -303,6 +299,22 @@
             this.events()
         },
         methods: {
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            },
             clickRemoveItem(index)
             {
                 this.form.items.splice(index, 1)

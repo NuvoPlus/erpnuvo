@@ -62,6 +62,7 @@
                         {{ ($path[0] === 'co-documents-unreferenced-note')?'nav-active nav-expanded':'' }}
                         {{ ($path[0] === 'co-documents-health')?'nav-active nav-expanded':'' }}
                         {{ ($path[0] === 'co-remissions')?'nav-active nav-expanded':'' }}
+                        
                         ">
                         <a class="nav-link" href="#">
                             <span class="material-symbols-outlined">
@@ -349,9 +350,7 @@
                                 @endif
 
 
-
                             @endif
-
                         </ul>
                     </li>
                     @endif
@@ -366,6 +365,7 @@
                         {{ ($path[0] === 'item-sets')?'nav-active nav-expanded':'' }}
                         {{ ($path[0] === 'item-set')?'nav-active nav-expanded':'' }}
                         {{ ($path[0] === 'document-pos')?'nav-active nav-expanded':'' }}
+                        {{ ($path[0] === 'pos.configuration')?'nav-active nav-expanded':'' }}
                         ">
                             <a class="nav-link" href="#">
                                 <span class="material-symbols-outlined">point_of_sale</span>
@@ -401,8 +401,6 @@
                         </li>
                         @endif
                     @endif
-
-
                     @if(in_array('ecommerce', $vc_modules))
                     <li class="nav-parent {{ in_array($path[0], ['ecommerce','items_ecommerce', 'tags', 'promotions', 'orders', 'configuration'])?'nav-active nav-expanded':'' }}">
                         <a class="nav-link" href="#">
@@ -444,28 +442,29 @@
                         </ul>
                     </li>
                     @endif
-                     @if(in_array('purchases', $vc_modules))
+                    @if(in_array('purchases', $vc_modules))
                         <li class="nav-parent
                             {{ ($path[0] === 'contacts')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'persons')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'customers')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'suppliers')?'nav-active nav-expanded':'' }}
+                            {{ ($path[0] === 'ecommerce')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'co-items')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'co-clients')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'person-types')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'purchase-quotations')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'purchase-quotations')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'ecommerce' && $path[1] === 'suppliers')?'nav-active nav-expanded':'' }}
+                            {{ ($path[0] === 'ecommerce' && $path[1] === 'customers')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'persons' && $path[1] === 'suppliers')?'nav-active nav-expanded':'' }}
                             {{ ($path[0] === 'persons' && $path[1] === 'purchase-quotations')?'nav-active nav-expanded':'' }}
+                            {{ ($path[0] === 'purchases' && $path[1] === 'customers')?'nav-active':'' }}
                             ">
+
                             <a class="nav-link" href="#">
                                 <span class="material-symbols-outlined">group</span>
                                 <span>Contactos</span>
                             </a>
                             <ul class="nav nav-children">
-                                <li class="{{ ($path[0] === 'ecommerce' && $path[1] === 'customers') ? 'nav-active' : '' }}">
-                                    <a class="nav-link" href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
+                                <li class="{{ ($path[0] === 'persons' && $path[1] === 'customers') ? 'nav-active':'' }}">
+                                    <a class="nav-link" href="{{ route('tenant.persons.index', ['type' => 'purchases']) }}">
                                         Clientes
                                     </a>
                                 </li>

@@ -114,7 +114,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Observaciones</label>
-                                    <el-input type="textarea" autosize :rows="1" v-model="form.observation">
+                                    <el-input type="textarea" autosize :rows="1" v-model="form.observation" maxlength="250" show-word-limit>
                                     </el-input>
                                 </div>
                             </div>
@@ -148,12 +148,11 @@
                                                 <td class="text-center">{{ row.item.unit_type.name }}</td>
                                                 <td class="text-right">{{ row.quantity }}</td>
                                                 <!--<td class="text-right" v-else ><el-input-number :min="0.01" v-model="row.quantity"></el-input-number> </td> -->
-                                                <td class="text-right">{{ ratePrefix() }}
-                                                    {{ getFormatUnitPriceRow(row.price) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.price) }}</td>
                                                 <!--<td class="text-right" v-else ><el-input-number :min="0.01" v-model="row.unit_price"></el-input-number> </td> -->
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.subtotal }}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.discount }}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.total }}</td>
+                                                <td class="text-right">{{ ratePrefix() }}  {{ getFormatDecimal(row.subtotal) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.discount) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.total) }}</td>
                                                 <td class="text-right">
                                                     <button type="button"
                                                         class="btn waves-effect waves-light btn-xs btn-danger"
@@ -189,12 +188,12 @@
                                     <tr>
                                         <td>TOTAL VENTA</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ ratePrefix() }} {{ form.sale }}</td>
+                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.sale) }}</td>
                                     </tr>
                                     <tr>
                                         <td>TOTAL DESCUENTO (-)</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ ratePrefix() }} {{ form.total_discount }}</td>
+                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.total_discount)}}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.total > 0) && (!tax.is_retention))" :key="index">
@@ -202,14 +201,13 @@
                                                 {{ tax.name }}(+)
                                             </td>
                                             <td>:</td>
-                                            <td class="text-right">{{ ratePrefix() }} {{ Number(tax.total).toFixed(2) }}
-                                            </td>
+                                            <td class="text-right">{{ ratePrefix() }} {{getFormatDecimal(Number(tax.total).toFixed(4)) }}</td>
                                         </tr>
                                     </template>
                                     <tr>
                                         <td>SUBTOTAL</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ ratePrefix() }} {{ form.subtotal }}</td>
+                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.subtotal) }}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.is_retention) && (tax.apply))" :key="index">
@@ -230,7 +228,7 @@
                                     </template>
                                 </table>
                                 <template>
-                                    <h3 class="text-right"><b>TOTAL: </b>{{ ratePrefix() }} {{ form.total }}</h3>
+                                    <h3 class="text-right"><b>TOTAL: </b>{{ ratePrefix() }} {{getFormatDecimal(form.total) }}</h3>
                                 </template>
                             </div>
                         </div>
@@ -277,6 +275,64 @@
     height: 65px !important;
     min-height: 65px !important;
 }
+@media screen and (max-width: 600px) {
+    .btn .text {
+        display: none;
+        /* Oculta el texto en pantallas pequeñas */
+    }
+    .btn .icon {
+        display: inline-block;
+        /* Muestra el ícono en pantallas pequeñas */
+    }
+}
+/* Estilo por defecto para pantallas más grandes */
+.btn .icon {
+    display: none;
+    /* Oculta los íconos en pantallas grandes */
+}
+.c-m-top{
+    top: 10px !important;   
+}
+.input-discount .el-input__inner {
+    text-align: right;
+    max-width: 100px;
+}
+#simbo {
+    top: 10px !important;
+}
+.el_input #elin {
+    width: 75% !important;
+}
+.input-discount .el-input__prefix {
+    left: 10px;
+    top: 5px;
+    color: #66789C;
+}
+/*busqueda de cliente*/
+.cliente-link {
+  color: #01c957;             /* Color principal (verde) */
+  font-weight: bold;          /* Texto en negrita */
+  font-size: 12px;            /* Tamaño de fuente */
+  text-decoration: none;      /* Sin subrayado */
+  transition: color 0.2s;
+}
+
+.cliente-link:hover {
+  color: #069D3D;
+}
+
+.search-icon {
+  font-size: 20px;    /* Icono más grande para mejor visibilidad */
+  margin-right: 5px;  /* Espacio entre el icono y el texto */
+}
+.htr{
+    padding-left: 20%;
+}
+.el-input--prefix .el-input__inner{
+    padding-left: 25% !important;
+    padding-right: 25% !important;
+}
+
 </style>
 <script>
 import DocumentFormItem from './partials/item.vue'
@@ -390,6 +446,22 @@ export default {
                 this.form.prefix = resol.prefix
                 this.form.type_document_id = resol.id
             }
+        },
+        getFormatDecimal(value) {
+            // Convierte la cadena a un número (si es posible)
+            const numericPrice = parseFloat(value);
+            if (isNaN(numericPrice)) {
+                // En caso de que la conversión no sea exitosa, maneja el error como desees
+                console.error('No se pudo convertir la cadena a un número.');
+                return value;
+            }
+            // Asumiendo que numericPrice es un número
+            const formattedPrice = numericPrice.toLocaleString('en-US', {
+                style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            return formattedPrice;
         },
         addDetailAiu(data) {
             this.detailAiu = data

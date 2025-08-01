@@ -43,11 +43,11 @@
                             </span>
                         </td>
                         <td class="text-center">{{ row.currency_name }}</td>
-                        <td class="text-right">{{ row.sale }}</td>
-                        <td class="text-right">{{ row.total_discount }}</td>
-                        <td class="text-right">{{ row.total_tax }}</td>
-                        <td class="text-right">{{ row.subtotal }}</td>
-                        <td class="text-right">{{ row.total }}</td>
+                        <td class="text-right">{{getFormatDecimal (row.sale) }}</td>
+                        <td class="text-right">{{getFormatDecimal (row.total_discount) }}</td>
+                        <td class="text-right">{{getFormatDecimal (row.total_tax) }}</td>
+                        <td class="text-right">{{getFormatDecimal (row.subtotal) }}</td>
+                        <td class="text-right">{{getFormatDecimal(row.total) }}</td>
 
                         <td class="text-center">
                             <button type="button" style="min-width: 41px" class="btn waves-effect waves-light btn-xs btn-success m-1__2"
@@ -131,6 +131,22 @@
             clickDialogDocument(document) {
                 this.recordToDocument = document
                 this.showDialogDocument = true
+            },
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
             },
         }
     }

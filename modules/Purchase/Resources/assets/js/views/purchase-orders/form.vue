@@ -13,7 +13,7 @@
                         <div class="col-sm-10 text-left mt-3 mb-0">
                             <address class="ib mr-2" >
                                 <span class="font-weight-bold d-block">ORDEN DE COMPRA</span>
-                                <span class="font-weight-bold d-block">OC-XXX</span>
+                                <span class="font-weight-bold d-block">OC-{{ form.id }}</span>
                                 <span class="font-weight-bold">{{company.name}}</span>
                                 <br>
                                 <div v-if="establishment.address != '-'">{{ establishment.address }}, </div> {{ establishment.city.name }}, {{ establishment.department.name }} - {{ establishment.country.name }}
@@ -132,9 +132,9 @@
                                             <td class="text-center">{{ row.item.unit_type.name }}</td>
                                             <td class="text-right">{{ row.quantity }}</td>
                                             <!-- <td class="text-right">{{ currency_type.symbol }} {{ row.unit_price }}</td> -->
-                                            <td class="text-right">{{ ratePrefix() }} {{ getFormatUnitPriceRow(row.unit_price) }}</td>
-                                            <td class="text-right">{{ ratePrefix() }} {{ row.discount }}</td>
-                                            <td class="text-right">{{ ratePrefix() }} {{ row.total }}</td>
+                                            <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.unit_price) }}</td>
+                                            <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.discount) }}</td>
+                                            <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.total) }}</td>
                                             <td class="text-right">
                                                 <button type="button" class="btn waves-effect waves-light btn-xs btn-danger" @click.prevent="clickRemoveItem(index)">x</button>
                                             </td>
@@ -150,12 +150,12 @@
                                     <tr>
                                         <td>TOTAL VENTA</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.sale }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.sale) }}</td>
                                     </tr>
                                     <tr >
                                         <td>TOTAL DESCUENTO (-)</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.total_discount }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.total_discount) }}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.total > 0) && (!tax.is_retention))" :key="index">
@@ -163,13 +163,13 @@
                                                 {{tax.name}}(+)
                                             </td>
                                             <td>:</td>
-                                            <td class="text-right">{{ratePrefix()}} {{Number(tax.total).toFixed(2)}}</td>
+                                            <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(Number(tax.total).toFixed(2))}}</td>
                                         </tr>
                                     </template>
                                     <tr>
                                         <td>SUBTOTAL</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.subtotal }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.subtotal) }}</td>
                                     </tr>
 
                                     <template v-for="(tax, index) in form.taxes">
@@ -195,7 +195,7 @@
                             </div>
 
                             <div class="col-md-12">
-                                <h3 class="text-right" v-if="form.total > 0"><b>TOTAL COMPRAS: </b>{{ currency_type.symbol }} {{ form.total }}</h3>
+                                <h3 class="text-right" v-if="form.total > 0"><b>TOTAL COMPRAS: </b>{{ currency_type.symbol }} {{ getFormatDecimal(form.total) }}</h3>
 
                                 <template v-if="is_perception_agent">
                                     <hr>
@@ -236,7 +236,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <h3 class="text-right" v-if="form.total > 0 && !hide_button"><b>MONTO TOTAL : </b>{{ ratePrefix() }} {{ total_amount }}</h3>
+                                    <h3 class="text-right" v-if="form.total > 0 && !hide_button"><b>MONTO TOTAL : </b>{{ ratePrefix() }} {{ getFormatDecimal(total_amount) }}</h3>
 
                                 </template>
                             </div>
@@ -349,6 +349,22 @@
 
         },
         methods: {
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            }, 
             setDataTotals() {
 
                 // console.log(val)

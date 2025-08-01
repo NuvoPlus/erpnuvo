@@ -13,7 +13,7 @@
                         <div class="col-sm-6 text-left mt-3 mb-0">
                             <address class="ib mr-2" >
                                 <span class="font-weight-bold d-block">COTIZACIÓN</span>
-                                <span class="font-weight-bold d-block">COT-XXX</span>
+                                <span class="font-weight-bold d-block">COT-{{ form.id }}</span>
                                 <span class="font-weight-bold">{{company.name}}</span>
                                 <br>
                                 <div v-if="establishment.address != '-'">{{ establishment.address }}, </div> {{ establishment.city.name }}, {{ establishment.department.name }} - {{ establishment.country.name }}
@@ -165,7 +165,7 @@
                                 <div class="form-group" :class="{'has-danger': errors.exchange_rate_sale}">
                                     <label class="control-label">Descripcion
                                     </label>
-                                    <el-input  type="textarea"  :rows="3" v-model="form.description"></el-input>
+                                    <el-input  type="textarea"  :rows="3" v-model="form.description" maxlength="250" show-word-limit></el-input>
                                     <small class="form-control-feedback" v-if="errors.description" v-text="errors.description[0]"></small>
                                 </div>
                             </div>
@@ -199,14 +199,14 @@
                                                     <small>{{row.tax.name}}</small>
                                                 </td>
                                                 <td class="text-center">{{ row.item.unit_type.name }}</td>
-                                                <td class="text-right">{{row.quantity}}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatUnitPriceRow(row.unit_price) }}</td>
-
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.subtotal }}</td>
-                                                <td class="text-right">{{ ratePrefix() }} {{ row.discount }}</td>
-                                                <td class="text-right">{{ratePrefix()}} {{row.total}}</td>
+                                                <td class="text-right">{{ parseInt(row.quantity) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.unit_price) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.subtotal) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.discount) }}</td>
+                                                <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.total) }}</td>
                                                 <td class="text-right">
                                                     <button type="button" class="btn waves-effect waves-light btn-xs btn-danger" @click.prevent="clickRemoveItem(index)">x</button>
+                                                    <button type="button" class="btn waves-effect waves-light btn-xs btn-info" @click="clickEditItem(row, index)"><span style='font-size:10px;'>&#9998;</span></button>
                                                 </td>
                                             </tr>
                                             <tr><td colspan="9"></td></tr>
@@ -226,12 +226,12 @@
                                     <tr>
                                         <td>TOTAL VENTA</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.sale }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.sale) }}</td>
                                     </tr>
                                     <tr >
                                         <td>TOTAL DESCUENTO (-)</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.total_discount }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.total_discount) }}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.total > 0) && (!tax.is_retention))" :key="index">
@@ -239,13 +239,13 @@
                                                 {{tax.name}}(+)
                                             </td>
                                             <td>:</td>
-                                            <td class="text-right">{{ratePrefix()}} {{Number(tax.total).toFixed(2)}}</td>
+                                            <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(tax.total) }}</td>
                                         </tr>
                                     </template>
                                     <tr>
                                         <td>SUBTOTAL</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ratePrefix()}} {{ form.subtotal }}</td>
+                                        <td class="text-right">{{ratePrefix()}} {{ getFormatDecimal(form.subtotal) }}</td>
                                     </tr>
 
                                     <template v-for="(tax, index) in form.taxes">
@@ -274,7 +274,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <h3 class="text-right" v-if="form.total > 0"><b>TOTAL A PAGAR: </b>{{ ratePrefix() }} {{ form.total }}</h3>
+                                <h3 class="text-right" v-if="form.total > 0"><b>TOTAL A PAGAR: </b>{{ ratePrefix() }} {{ getFormatDecimal(form.total) }}</h3>
                             </div>
 
                         </div>
@@ -399,6 +399,49 @@
                 }else{
                     this.form.terms_condition = null
                 }
+            },
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            },
+            clickEditItem(row, index) {
+            if (row.tax !== undefined) {
+                let ivaRate = parseFloat(row.tax.rate) / row.tax.conversion; // Obtiene la tasa de IVA
+                let precioConIVA = row.price * (1 + ivaRate); // Calcula el precio con IVA
+                // Redondea el precio con IVA a dos decimales
+                precioConIVA = Math.round(precioConIVA * 100) / 100;
+                // Actualiza el precio en el ítem para la edición
+                row.price = precioConIVA;
+            }
+            else {
+                let ivaRate = null
+                let precioConIVA = row.price
+                // Redondea el precio con IVA a dos decimales
+                precioConIVA = precioConIVA
+                // Actualiza el precio en el ítem para la edición
+                row.price = precioConIVA;
+            }
+            // Configura el ítem para la edición
+            row.indexi = index;
+            this.recordItem = row;
+            this.showDialogAddItem = true;
+            },
+            clickEditUser(row, index) {
+                row.indexi = index
+                this.recordItemHealthUser = row
+                this.showDialogAddHealthUser = true
             },
             clickAddPayment() {
                 this.form.payments.push({

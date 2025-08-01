@@ -180,7 +180,7 @@
                                 <div class="form-group" :class="{ 'has-danger': errors.exchange_rate_sale }">
                                     <label class="control-label">Descripcion
                                     </label>
-                                    <el-input type="textarea" :rows="3" v-model="form.description"></el-input>
+                                    <el-input type="textarea" :rows="3" v-model="form.description" maxlength="250" show-word-limit></el-input>
                                     <small class="form-control-feedback" v-if="errors.description"
                                         v-text="errors.description[0]"></small>
                                 </div>
@@ -221,6 +221,10 @@
                                                 <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.discount) }}</td>
                                                 <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(row.total) }}</td>
                                                 <td class="text-right">
+                                                    <button type="button"
+                                                        class="btn waves-effect waves-light btn-xs btn-info"
+                                                        @click="clickEditItem(row, index)"><span style='font-size:10px;'>&#9998;</span>
+                                                    </button>
                                                     <button type="button"   
                                                         class="btn waves-effect waves-light btn-xs btn-danger"
                                                         @click.prevent="clickRemoveItem(index)">x</button>
@@ -751,6 +755,33 @@ export default {
         clickAddItem() {
             this.recordItem = null
             this.showDialogAddItem = true
+        },
+        clickEditItem(row, index) {
+            if (row.tax !== undefined) {
+                let ivaRate = parseFloat(row.tax.rate) / row.tax.conversion; // Obtiene la tasa de IVA
+                let precioConIVA = row.price * (1 + ivaRate); // Calcula el precio con IVA
+                // Redondea el precio con IVA a dos decimales
+                precioConIVA = Math.round(precioConIVA * 100) / 100;
+                // Actualiza el precio en el ítem para la edición
+                row.price = precioConIVA;
+            }
+            else {
+                let ivaRate = null
+                let precioConIVA = row.price
+                // Redondea el precio con IVA a dos decimales
+                precioConIVA = precioConIVA
+                // Actualiza el precio en el ítem para la edición
+                row.price = precioConIVA;
+            }
+            // Configura el ítem para la edición
+            row.indexi = index;
+            this.recordItem = row;
+            this.showDialogAddItem = true;
+        },
+        clickEditUser(row, index) {
+            row.indexi = index
+            this.recordItemHealthUser = row
+            this.showDialogAddHealthUser = true
         },
     }
 }

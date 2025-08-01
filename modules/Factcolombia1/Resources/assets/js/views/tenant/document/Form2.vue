@@ -180,7 +180,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Observaciones</label>
-                                    <el-input type="textarea" autosize :rows="1" v-model="form.observation">
+                                    <el-input type="textarea" autosize :rows="1" v-model="form.observation" maxlength="250" show-word-limit>
                                     </el-input>
                                 </div>
                             </div>
@@ -333,14 +333,14 @@
                             </div>
                             <div class="col-md-12" style="display: flex; flex-direction: column; align-items: flex-end;"
                                 v-if="form.items.length > 0">
-                                <table style="margin-top: 10px; width: 460px;>
+                                <table style="margin-top: 10px; width: 460px;">
                                     <tr>
-                                        <td>TOTAL VENTA</td>
+                                        <td style="padding-left: 20%;">TOTAL VENTA</td>
                                         <td>:</td>
                                         <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.sale) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td style="padding-left: 20%;">
                                             DESCUENTO
                                             <el-switch v-model="global_discount_is_amount" :active-text="ratePrefix()"
                                                 inactive-text="%" @change="calculateTotal">
@@ -361,37 +361,34 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>TOTAL DESCUENTO (-)</td>
+                                        <td style="padding-left: 20%;">TOTAL DESCUENTO (-)</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.total_discount)
-                                            }}</td>
+                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.total_discount)}}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.total > 0) && (!tax.is_retention))" :key="index">
-                                            <td>
+                                            <td style="padding-left: 20%;">
                                                 {{ tax.name }}(+)
                                             </td>
                                             <td>:</td>
-                                            <td class="text-right">{{ ratePrefix() }} {{
-                                                getFormatDecimal(Number(tax.total).toFixed(4)) }}</td>
+                                            <td class="text-right">{{ ratePrefix() }} {{getFormatDecimal(Number(tax.total).toFixed(4)) }}</td>
                                         </tr>
                                     </template>
                                     <tr>
-                                        <td>SUBTOTAL</td>
+                                        <td style="padding-left: 20%;">SUBTOTAL</td>
                                         <td>:</td>
-                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.subtotal) }}
-                                        </td>
+                                        <td class="text-right">{{ ratePrefix() }} {{ getFormatDecimal(form.subtotal) }}</td>
                                     </tr>
                                     <template v-for="(tax, index) in form.taxes">
                                         <tr v-if="((tax.is_retention) && (tax.apply))" :key="index">
-                                            <td>{{ tax.name }}(-)</td>
+                                            <td style="padding-left: 20%;">{{ tax.name }}(-)</td>
                                             <td>:</td>
                                             <!-- <td class="text-right">
                                                 {{ratePrefix()}} {{Number(tax.retention).toFixed(4)}}
                                             </td> -->
                                             <td class="text-right" width=40%>
                                                 <el-input :value="formatRetention(tax.retention)" readonly :id="elin">
-                                                    <span id="simbo"slot="prefix" class="c-m-top">{{ ratePrefix() }}</span>
+                                                    <span id="simbo"slot="prefix1" class="c-m-top">{{ ratePrefix() }}</span>
                                                     <i slot="suffix" class="el-input__icon el-icon-delete pointer"
                                                         @click="clickRemoveRetention(index)"></i>
                                                     <!-- <el-button slot="suffix" icon="el-icon-delete" @click="clickRemoveRetention(index)"></el-button> -->
@@ -401,8 +398,7 @@
                                     </template>
                                 </table>
                                 <template>
-                                    <h3 class="text-right"><b>TOTAL: </b>{{ ratePrefix() }} {{
-                                        getFormatDecimal(form.total) }}</h3>
+                                    <h3 class="text-right"><b>TOTAL: </b>{{ ratePrefix() }} {{getFormatDecimal(form.total) }}</h3>
                                 </template>
                             </div>
                         </div>
@@ -451,6 +447,7 @@
     height: 65px !important;
     min-height: 65px !important;
 }
+
 @media screen and (max-width: 600px) {
     .btn .text {
         display: none;
@@ -500,6 +497,13 @@
 .search-icon {
   font-size: 20px;    /* Icono más grande para mejor visibilidad */
   margin-right: 5px;  /* Espacio entre el icono y el texto */
+}
+.htr{
+    padding-left: 20%;
+}
+.el-input--prefix .el-input__inner{
+    padding-left: 25% !important;
+    padding-right: 25% !important;
 }
 
 </style>
