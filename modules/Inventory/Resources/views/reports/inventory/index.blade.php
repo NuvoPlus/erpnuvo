@@ -150,8 +150,8 @@
                                     {{-- <tr>
                                         <td class="celda" colspan="5"></td>
                                         <td class="celda">Total</td>
-                                        <td class="celda text-right">{{ number_format($total_global_sale_unit_price, 6, ".", "") }}</td>
-                                        <td class="celda text-right">{{ number_format($total_global_purchase_unit_price, 6, ".", "") }}</td>
+                                        <td class="celda text-right">{{ number_format($total_global_sale_unit_price, 2, ".", "") }}</td>
+                                        <td class="celda text-right">{{ number_format($total_global_purchase_unit_price, 2, ".", "") }}</td>
                                     </tr> --}}
 
                                 </tbody>

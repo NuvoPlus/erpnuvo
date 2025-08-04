@@ -40,21 +40,21 @@
                         <td class="celda">{{$loop->iteration}}</td>
                         <td class="celda">{{$value->item->internal_id}}</td>
                         <td class="celda">{{$value->item->name ?? ''}}</td>
-                        <td class="celda">{{$value->stock}}</td>
-                        <td class="celda">{{$value->item->sale_unit_price}}</td>
-                        <td class="celda">{{$value->item->purchase_unit_price}}</td>
+                        <td class="celda text-right">{{number_format($value->stock, 2)}}</td>
+                        <td class="celda text-right">{{number_format($value->item->sale_unit_price, 2)}}</td>
+                        <td class="celda text-right">{{number_format($value->item->purchase_unit_price, 2)}}</td>
                         <td class="celda">{{$value->warehouse->description}}</td>
 
-                        <td class="celda text-right">{{$global_sale_unit_price}}</td>
-                        <td class="celda text-right">{{$global_purchase_unit_price}}</td>
+                        <td class="celda text-right">{{number_format($global_sale_unit_price, 2)}}</td>
+                        <td class="celda text-right">{{number_format($global_purchase_unit_price, 2)}}</td>
                     </tr>
                 @endforeach
 
                 <tr>
                     <td class="celda" colspan="5"></td>
                     <td class="celda">Total</td>
-                    <td class="celda text-right">{{ number_format($total_global_sale_unit_price, 6, ".", "") }}</td>
-                    <td class="celda text-right">{{ number_format($total_global_purchase_unit_price, 6, ".", "") }}</td>
+                    <td class="celda text-right">{{ number_format($total_global_sale_unit_price, 2, ".", "") }}</td>
+                    <td class="celda text-right">{{ number_format($total_global_purchase_unit_price, 2, ".", "") }}</td>
                 </tr>
 
             </tbody>

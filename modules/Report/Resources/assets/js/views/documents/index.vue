@@ -33,7 +33,7 @@
                         <td>{{row.state_type_description}}</td>
                         <td>{{ row.currency_type_id}}</td>
                         <td class="text-right">
-                            {{ row.total }}
+                            {{getFormatDecimal( returnTotal, 2)}}
                             <!-- {{ (row.document_type_id == '07') ? ( (row.total == 0) ? '0.00': '-'+row.total) : ((row.document_type_id!='07' && (row.state_type_id =='11'||row.state_type_id =='09')) ? '0.00':row.total) }} -->
                         </td>
                     </tr>
@@ -54,6 +54,23 @@ export default {
         }
     },
     created() {},
-    methods: {}
+    methods: {
+    getFormatDecimal(value) {
+            // Convierte la cadena a un número (si es posible)
+            const numericPrice = parseFloat(value);
+            if (isNaN(numericPrice)) {
+                // En caso de que la conversión no sea exitosa, maneja el error como desees
+                console.error('No se pudo convertir la cadena a un número.');
+                return value;
+            }
+            // Asumiendo que numericPrice es un número
+            const formattedPrice = numericPrice.toLocaleString('en-US', {
+                style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            return formattedPrice;
+        },
+    }
 }
 </script>

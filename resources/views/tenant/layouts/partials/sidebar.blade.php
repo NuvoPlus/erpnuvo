@@ -354,46 +354,39 @@
                         </ul>
                     </li>
                     @endif
-
                     @if(auth()->user()->type != 'integrator')
                         @if(in_array('pos', $vc_modules))
-                        <li class="
-                        nav-parent
-                        {{ ($path[0] === 'pos' )?'nav-active nav-expanded':'' }}
-                        {{ ($path[0] === 'p.o.s' )?'nav-active nav-expanded':'' }}
-                        {{ ($path[0] === 'cash')?'nav-active nav-expanded':'' }}
-                        {{ ($path[0] === 'item-sets')?'nav-active nav-expanded':'' }}
-                        {{ ($path[0] === 'item-set')?'nav-active nav-expanded':'' }}
-                        {{ ($path[0] === 'document-pos')?'nav-active nav-expanded':'' }}
-                        {{ ($path[0] === 'pos.configuration')?'nav-active nav-expanded':'' }}
-                        ">
+                        <li class="nav-parent
+                            {{ in_array($path[0], ['pos', 'cash', 'item-sets', 'item-set', 'document-pos']) ? 'nav-active nav-expanded' : '' }}
+                            {{ ($path[0] === 'pos' && isset($path[1]) && $path[1] === 'configuration') ? 'nav-active nav-expanded' : '' }}
+                            ">
                             <a class="nav-link" href="#">
                                 <span class="material-symbols-outlined">point_of_sale</span>
                                 <span>Punto de Venta P.O.S.</span>
                             </a>
                             <ul class="nav nav-children">
-                                <li class="{{ ($path[0] === 'p.o.s'  )?'nav-active':'' }}">
-                                    <a class="nav-link" href="{{route('tenant.pos.index')}}">
+                               <li class="{{ $path[0] === 'pos' && (!isset($path[1]) || $path[1] !== 'configuration') ? 'nav-active' : '' }}">
+                                    <a class="nav-link" href="{{ route('tenant.pos.index') }}">
                                         Punto de venta
                                     </a>
                                 </li>
-                                <li class="{{ ($path[0] === 'cash'  )?'nav-active':'' }}">
-                                    <a class="nav-link" href="{{route('tenant.cash.index')}}">
-                                        Caja menor
+                                <li class="{{ $path[0] === 'cash' ? 'nav-active' : '' }}">
+                                    <a class="nav-link" href="{{ route('tenant.cash.index') }}">
+                                        Caja menor  
                                     </a>
                                 </li>
-                                <li class="{{ ($path[0] === 'item-sets'  )?'nav-active':'' }}">
-                                    <a class="nav-link" href="{{route('tenant.item_sets.index')}}">
+                                <li class="{{ $path[0] === 'item-sets' ? 'nav-active' : '' }}">
+                                    <a class="nav-link" href="{{ route('tenant.item_sets.index') }}">
                                         Conjuntos/Packs/Promociones
                                     </a>
                                 </li>
-                                <li class="{{ ($path[0] === 'item-set'  )?'nav-active':'' }}">
-                                    <a class="nav-link" href="{{route('tenant.pos.configuration')}}">
+                                <li class="{{ $path[0] === 'pos' && isset($path[1]) && $path[1] === 'configuration' ? 'nav-active' : '' }}">
+                                    <a class="nav-link" href="{{ route('tenant.pos.configuration') }}">
                                         Configuración
                                     </a>
-                                </li>             
-                                <li class="{{ ($path[0] === 'document-pos'  )?'nav-active':'' }}">
-                                    <a class="nav-link" href="{{route('tenant.document_pos.index')}}">
+                                </li>
+                                <li class="{{ $path[0] === 'document-pos' ? 'nav-active' : '' }}">
+                                    <a class="nav-link" href="{{ route('tenant.document_pos.index') }}">
                                         Lista Documentos
                                     </a>
                                 </li>
@@ -444,32 +437,25 @@
                     @endif
                     @if(in_array('purchases', $vc_modules))
                         <li class="nav-parent
-                            {{ ($path[0] === 'contacts')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'persons')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'customers')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'ecommerce')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'co-items')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'co-clients')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'person-types')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'purchase-quotations')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'ecommerce' && $path[1] === 'customers')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'persons' && $path[1] === 'suppliers')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'persons' && $path[1] === 'purchase-quotations')?'nav-active nav-expanded':'' }}
-                            {{ ($path[0] === 'purchases' && $path[1] === 'customers')?'nav-active':'' }}
-                            ">
-
+                            {{ in_array($path[0], ['contacts', 'persons', 'customers', 'suppliers', 'co-items', 'co-clients', 'person-types', 'purchase-quotations']) ? 'nav-active nav-expanded' : '' }}
+                            {{ ($path[0] === 'ecommerce' && $path[1] === 'suppliers') ? 'nav-expanded' : '' }}
+                            {{ ($path[0] === 'purchases' && $path[1] === 'customers') ? 'nav-expanded' : '' }}
+                        ">
                             <a class="nav-link" href="#">
                                 <span class="material-symbols-outlined">group</span>
                                 <span>Contactos</span>
                             </a>
                             <ul class="nav nav-children">
-                                <li class="{{ ($path[0] === 'persons' && $path[1] === 'customers') ? 'nav-active':'' }}">
-                                    <a class="nav-link" href="{{ route('tenant.persons.index', ['type' => 'purchases']) }}">
+
+                                {{-- Clientes --}}
+                                <li class="{{ request()->is('persons/customers') ? 'nav-active' : '' }}">
+                                    <a class="nav-link" href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
                                         Clientes
                                     </a>
                                 </li>
-                                {{-- Submenú de proveedores --}}
-                                <li class="nav-parent
+
+                                {{-- Proveedores --}}
+                                 <li class="nav-parent
                                 {{ ($path[0] === 'persons')?'nav-active nav-expanded':'' }}
                                 {{ ($path[0] === 'purchase-quotations')?'nav-active nav-expanded':'' }}
                                 ">
@@ -489,7 +475,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                            </ul> 
+                            </ul>
                         </li>
                     @endif
                     @if(auth()->user()->type != 'integrator')

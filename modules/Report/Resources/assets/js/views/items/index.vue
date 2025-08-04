@@ -16,7 +16,7 @@
                             <th class="">Cliente</th>
                             <th class="">Cantidad</th>
                             <th class="">Monto</th>
-                        <tr>
+                        </tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td> 
                             <td>{{row.date_of_issue}}</td>
@@ -26,7 +26,7 @@
                             <td>{{row.customer_number}}</td>
                             <td>{{row.customer_name}}</td>
                             <td>{{row.quantity}}</td>
-                            <td>{{ row.total }}</td> 
+                            <td class="text-right">{{ getFormatDecimal(row.total) }}</td>
                         </tr>
                         
                     </data-table>
@@ -54,7 +54,22 @@
         async created() { 
         },
         methods: { 
-             
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            },    
             
         }
     }
