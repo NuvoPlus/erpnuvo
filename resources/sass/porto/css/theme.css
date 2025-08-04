@@ -6610,7 +6610,7 @@ html.dark .card-footer {
 }
 
 html .card-primary .card-header {
-	background: #0088CC;
+	background: #01c957;
 }
 
 html .card-primary .card-subtitle {
@@ -7876,8 +7876,9 @@ html.dark div.DTTT_container .btn {
 .datepicker thead tr:first-child th:hover,
 .datepicker tfoot tr th:hover,
 .datepicker table tr td span:hover {
-	background: #CCC;
+	background: #01c957 !important;
 	color: #FFF;
+
 }
 
 .datepicker table tbody tr td span.old,
