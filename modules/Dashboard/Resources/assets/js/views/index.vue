@@ -169,7 +169,7 @@
                             <br />Pagado
                           </h4>
                           <div class="info">
-                            <strong class="amount text-info">{{ sale_note.totals.total_payment }}</strong>
+                            <strong class="amount text-info">{{ getFormatDecimal(sale_note.totals.total_payment) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -182,7 +182,7 @@
                           <div class="info">
                             <strong
                               class="amount text-danger"
-                            >{{ sale_note.totals.total_to_pay }}</strong>
+                            >{{ getFormatDecimal(sale_note.totals.total_to_pay) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -193,7 +193,7 @@
                             <br />&nbsp;
                           </h4>
                           <div class="info">
-                            <strong class="amount">{{ sale_note.totals.total }}</strong>
+                            <strong class="amount">{{ getFormatDecimal(sale_note.totals.total) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -224,7 +224,7 @@
                             <br />Pagado
                           </h4>
                           <div class="info">
-                            <strong class="amount text-info">{{ document.totals.total_payment }}</strong>
+                            <strong class="amount text-info">{{ getFormatDecimal(document.totals.total_payment) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -235,7 +235,7 @@
                             <br />por Pagar
                           </h4>
                           <div class="info">
-                            <strong class="amount text-danger">{{ document.totals.total_to_pay }}</strong>
+                            <strong class="amount text-danger">{{ getFormatDecimal(document.totals.total_to_pay) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -246,7 +246,7 @@
                             <br />&nbsp;
                           </h4>
                           <div class="info">
-                            <strong class="amount">{{ document.totals.total }}</strong>
+                            <strong class="amount">{{ getFormatDecimal(document.totals.total) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -277,7 +277,7 @@
                             <br />Pagado
                           </h4>
                           <div class="info">
-                            <strong class="amount text-info">{{ document_pos.totals.total_payment }}</strong>
+                            <strong class="amount text-info">{{ getFormatDecimal(document_pos.totals.total_payment) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -288,7 +288,7 @@
                             <br />por Pagar
                           </h4>
                           <div class="info">
-                            <strong class="amount text-danger">{{ document_pos.totals.total_to_pay }}</strong>
+                            <strong class="amount text-danger">{{ getFormatDecimal(document_pos.totals.total_to_pay) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -299,7 +299,7 @@
                             <br />&nbsp;
                           </h4>
                           <div class="info">
-                            <strong class="amount">{{ document_pos.totals.total }}</strong>
+                            <strong class="amount">{{ getFormatDecimal(document_pos.totals.total) }}</strong>
                           </div>
                         </div>
                       </div>
@@ -623,7 +623,7 @@
                           <td>{{ row.internal_id }}</td>
                           <td>{{ row.description }}</td>
                           <td class="text-right">{{ row.move_quantity }}</td>
-                          <td class="text-right">{{ row.total }}</td>
+                          <td class="text-right">{{ getFormatDecimal(row.total) }}</td>
                         </tr>
                       </template>
                     </tbody>
@@ -669,7 +669,7 @@
                             <small v-text="row.number"></small>
                           </td>
                           <td class="text-right">{{ row.transaction_quantity }}</td>
-                          <td class="text-right">{{ row.total }}</td>
+                          <td class="text-right">{{ getFormatDecimal(row.total) }}</td>
                         </tr>
                       </template>
                     </tbody>
@@ -790,6 +790,22 @@ export default {
   },
 
   methods: {
+    getFormatDecimal(value) {
+          // Convierte la cadena a un número (si es posible)
+          const numericPrice = parseFloat(value);
+          if (isNaN(numericPrice)) {
+              // En caso de que la conversión no sea exitosa, maneja el error como desees
+              console.error('No se pudo convertir la cadena a un número.');
+              return value;
+          }
+          // Asumiendo que numericPrice es un número
+          const formattedPrice = numericPrice.toLocaleString('en-US', {
+              style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          });
+          return formattedPrice;
+    },
     changeFilterItem(){
       this.form.item_id = null
       this.loadDataUtilities()

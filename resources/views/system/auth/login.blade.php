@@ -5,7 +5,7 @@
     <section class="body-sign">
         <div class="center-sign">
             <div class="">
-                <div class="card card-header card-primary" style="background:#0088CC">
+                <div class="card card-header card-primary" style="background:#01c957">
                     <p class="card-title text-center">Acceso al Sistema</p>
                     <h1 class="display-3 position-absolute text-left font-weight-bold" style="left: 90%; margin-top: -35px; color: rgba(255,255,255,.1);">2</h1>
                 </div>
