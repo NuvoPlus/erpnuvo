@@ -218,7 +218,7 @@ class RemissionController extends Controller
     public function createPdf($remission = null, $format_pdf = 'a4', $filename = null)
     {
 
-        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set("pcre.backtrack_limit", "10000000");
         $template = new Template();
         $pdf = new Mpdf();
 

@@ -27,12 +27,12 @@
                                 <a href="#">@{{ row.name }}</a>
                             </h2>
                         </td>
-                        <td>$ @{{ row.sale_unit_price }}</td>
+                        <td>$ @{{ getFormatDecimal(row.sale_unit_price) }}</td>
                         <td>
                             <input class="vertical-quantity form-control input_quantity" :data-product="row.id"
                                 type="text">
                         </td>
-                        <td>@{{ row.sub_total }}</td>
+                        <td>@{{ getFormatDecimal(row.sub_total) }}</td>
                         <td>
                             <button type="button" @click="deleteItem(row.id, index)"
                                 class="btn btn-outline-danger btn-sm"><i class="icon-cancel"></i></button>
@@ -68,12 +68,12 @@
 
                     <tr v-if="summary.sale > 0">
                         <td>TOTAL VENTA</td>
-                        <td>$ @{{ summary.sale }}</td>
+                        <td>$ @{{ getFormatDecimal(summary.sale) }}</td>
                     </tr>
                     <template v-for="(tax, index) in summary.taxes">
                         <tr v-if="((tax.total > 0) && (!tax.is_retention))" :key="index">
                             <td>@{{tax.name}}(+)</td>
-                            <td>$ @{{Number(tax.total).toFixed(2)}}</td>
+                            <td>$ @{{getFormatDecimal(tax.total)}}</td>
                         </tr>
                     </template> 
                     {{-- <tr v-if="summary.subtotal > 0">
@@ -84,7 +84,7 @@
                 <tfoot>
                     <tr>
                         <td>Orden Total</td>
-                        <td>$ @{{summary.total}}</td>
+                        <td>$ @{{getFormatDecimal(summary.total)}}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -123,6 +123,7 @@
 
         <div class="cart-summary">
             <h3>Datos de contacto y envío</h3>
+            <h6>El Vendedor Se Pondra En Contacto Con Usted Despues De Que Realize El Pedido</h6>
 
             <form autocomplete="off" action="#">
 
@@ -256,6 +257,22 @@
                 await axios.get(`/ecommerce/tables`).then(response => { 
                     this.payment_method_types = response.data.payment_method_types
                 })
+            },
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
             },
             getFormPaymentCash() {
 

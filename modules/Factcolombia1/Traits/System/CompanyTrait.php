@@ -221,7 +221,7 @@ trait CompanyTrait
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],[
-                'name' => 'IVA0AIU',
+                'name' => 'IVA 0 AIU',
                 'code' => '98',
                 'rate' => '0.00',
                 'conversion' => '100.00',
@@ -229,7 +229,7 @@ trait CompanyTrait
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ],[
-                'name' => 'IVA19AIU',
+                'name' => 'IVA 19 AIU',
                 'code' => '99',
                 'rate' => '19',
                 'conversion' => '100.00',
@@ -342,7 +342,7 @@ trait CompanyTrait
             ]);
 
         DB::table('co_taxes')->insert([
-            [ 'name' => 'IVA5', 'code' => '71', 'rate' => '5.0', 'conversion' => '100.0', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'type_tax_id' => 1 ],
+            [ 'name' => 'IVA 5', 'code' => '71', 'rate' => '5.0', 'conversion' => '100.0', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'type_tax_id' => 1 ],
         ]);
 
     }

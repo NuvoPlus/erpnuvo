@@ -19,19 +19,19 @@
                             <th class="text-center"><strong>Compras</strong></th>
                             <th class="text-center"><strong>Gastos</strong></th>
                             <!-- <th class="text-center"> <strong>Saldo</strong></th> -->
-                        <tr>
+                        </tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td> 
                             <td>{{row.description}}</td>
-                            <td class="text-center">{{ (row.document_payment != '-') ? ''+row.document_payment : row.document_payment}}</td>
-                            <td class="text-center">{{ (row.remission_payment != '-') ? ''+row.remission_payment : row.remission_payment}}</td>
-                            <td class="text-center">{{ (row.document_pos_payment != '-') ? ''+row.document_pos_payment : row.document_pos_payment}}</td>
+                            <td class="text-center">{{ row.document_payment != '-' ? getFormatDecimal(row.document_payment) : row.document_payment }}</td>
+                            <td class="text-center">{{ row.remission_payment != '-' ? getFormatDecimal(row.remission_payment) : row.remission_payment }}</td>
+                            <td class="text-center">{{ row.document_pos_payment != '-' ? getFormatDecimal(row.document_pos_payment) : row.document_pos_payment }}</td>
                             <!-- <td class="text-center">{{ (row.sale_note_payment != '-') ? ''+row.sale_note_payment : row.sale_note_payment}}</td> -->
-                            <td class="text-center">{{ (row.quotation_payment != '-') ? ''+row.quotation_payment : row.quotation_payment}}</td>
+                            <td class="text-center">{{ row.quotation_payment != '-' ? getFormatDecimal(row.quotation_payment) : row.quotation_payment }}</td>
                             <!-- <td class="text-center">{{ (row.contract_payment != '-') ? ''+row.contract_payment : row.contract_payment}}</td> -->
-                            <td class="text-center">{{ (row.income_payment != '-') ? ''+row.income_payment : row.income_payment}}</td>
-                            <td class="text-center">{{ (row.purchase_payment != '-') ? ''+row.purchase_payment : row.purchase_payment}}</td>
-                            <td class="text-center">{{ (row.expense_payment != '-') ? ''+row.expense_payment : row.expense_payment}}</td>
+                            <td class="text-center">{{ row.income_payment != '-' ? getFormatDecimal(row.income_payment) : row.income_payment }}</td>
+                            <td class="text-center">{{ row.purchase_payment != '-' ? getFormatDecimal(row.purchase_payment) : row.purchase_payment }}</td>
+                            <td class="text-center">{{ row.expense_payment != '-' ? getFormatDecimal(row.expense_payment) : row.expense_payment }}</td>
                             <!-- <td class="text-center">{{row.balance}}</td>  -->
                         </tr>
                     </data-table>
@@ -58,7 +58,22 @@
         async created() {
         },
         methods: {
-
+        getFormatDecimal(value) {
+            // Convierte la cadena a un número (si es posible)
+            const numericPrice = parseFloat(value);
+            if (isNaN(numericPrice)) {
+                // En caso de que la conversión no sea exitosa, maneja el error como desees
+                console.error('No se pudo convertir la cadena a un número.');
+                return value;
+            }
+            // Asumiendo que numericPrice es un número
+            const formattedPrice = numericPrice.toLocaleString('en-US', {
+                style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            return formattedPrice;
+        },
 
         }
     }

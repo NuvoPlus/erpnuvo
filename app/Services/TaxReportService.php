@@ -16,10 +16,10 @@ class TaxReportService
 
     public function getTotalIva5($items, $total_sale = false)
     {
-        $tax = Tax::where('name', 'IVA5')->first();
+        $tax = Tax::where('name', 'IVA 5')->first();
         if(!$tax)
         {
-            throw new Exception("Tax IVA5 no encontrado");
+            throw new Exception("Tax IVA 5 no encontrado");
             //return 0;
         }
         $sum = collect($items)->where('tax_id', $tax->id )->sum('total');

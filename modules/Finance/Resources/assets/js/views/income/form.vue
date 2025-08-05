@@ -150,7 +150,7 @@
                                         <tr v-for="(row, index) in form.items" :key="index">
                                             <td>{{ index + 1 }}</td>
                                             <td>{{ row.description }}</td>
-                                            <td class="text-right">{{ currency_type.symbol }} {{ row.total }}</td>
+                                            <td class="text-right">{{ currency_type.symbol }} {{ getFormatDecimal(row.total) }}</td>
                                             <td class="text-right">
                                                 <button type="button" class="btn waves-effect waves-light btn-xs btn-danger" @click.prevent="clickRemoveItem(index)">x</button>
                                             </td>
@@ -160,7 +160,7 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <h3 class="text-right" v-if="form.total > 0"><b>TOTAL: </b>{{ currency_type.symbol }} {{ form.total }}</h3>
+                            <h3 class="text-right" v-if="form.total > 0"><b>TOTAL: </b>{{ currency_type.symbol }} {{ getFormatDecimal(form.total) }}</h3>
                         </div>
                     </div>
                 </div>
@@ -242,6 +242,22 @@
            })
         },
         methods: {
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            },
             initForm() {
                 this.errors = {}
                 this.form = {

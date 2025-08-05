@@ -221,7 +221,7 @@ class TechnicalServiceController extends Controller
 
     public function createPdf($technical_service = null, $format_pdf = null, $filename = null) {
 
-        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set("pcre.backtrack_limit", "10000000");
         $template = new Template();
         $pdf = new Mpdf();
 

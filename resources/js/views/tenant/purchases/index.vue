@@ -88,11 +88,10 @@
                                 @click.prevent="clickPurchasePayment(row.id)"
                             >Pagos</button>
                         </td>
-
                         <td class="text-center">{{ row.currency_type_id }}</td>
                         <!-- <td class="text-right">{{ row.total_exportation }}</td> -->
                         <td v-if="columns.total_perception.visible" class="text-right">{{ row.total_perception ? row.total_perception : 0 }}</td>
-                        <td class="text-right">{{ row.total   }}</td>
+                        <td class="text-right">{{ getFormatDecimal(row.total)}}</td>
                         <td>
                             <a v-if="row.state_type_id != '11'" :href="`/${resource}/edit/${row.id}`" type="button" class="btn waves-effect waves-light btn-xs btn-info">Editar</a>
                             <a v-if="row.state_type_id != '11' && !['07', '08'].includes(String(row.document_type_id))" :href="`/${resource}/note/${row.id}`" type="button" class="btn waves-effect waves-light btn-xs btn-warning">Nota</a>
@@ -186,6 +185,22 @@
         created() {
         },
         methods: {
+            getFormatDecimal(value) {
+                // Convierte la cadena a un número (si es posible)
+                const numericPrice = parseFloat(value);
+                if (isNaN(numericPrice)) {
+                    // En caso de que la conversión no sea exitosa, maneja el error como desees
+                    console.error('No se pudo convertir la cadena a un número.');
+                    return value;
+                }
+                // Asumiendo que numericPrice es un número
+                const formattedPrice = numericPrice.toLocaleString('en-US', {
+                    style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                return formattedPrice;
+            },
             clickPurchasePayment(recordId) {
                 this.recordId = recordId;
                 this.showDialogPurchasePayments = true

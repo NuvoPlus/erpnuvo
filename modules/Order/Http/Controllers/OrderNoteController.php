@@ -464,7 +464,7 @@ class OrderNoteController extends Controller
     }
 
     public function createPdf($order_note = null, $format_pdf = null, $filename = null) {
-        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set("pcre.backtrack_limit", "10000000");
         $template = new Template();
         $pdf = new Mpdf();
 

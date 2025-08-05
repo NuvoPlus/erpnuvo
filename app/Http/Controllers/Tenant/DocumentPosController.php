@@ -788,7 +788,7 @@ class DocumentPosController extends Controller
     }
 
     public function createPdf($sale_note = null, $format_pdf = null, $filename = null) {
-        ini_set("pcre.backtrack_limit", "5000000");
+        ini_set("pcre.backtrack_limit", "10000000");
         $template = new Template();
         $pdf = new Mpdf();
 

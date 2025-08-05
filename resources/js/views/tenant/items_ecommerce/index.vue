@@ -51,7 +51,7 @@
             <td>{{ row.unit_type_id }}</td>
             <td>{{ row.name }}</td>
             <td>{{ row.description }}</td>
-            <td class="text-center">{{ row.sale_unit_price }}</td>
+            <td class="text-center">{{ getFormatDecimal(row.sale_unit_price) }}</td>
             <td class="text-center">
               <a @click="viewImages(row)" href="#">
                 <img :src="row.image_url_small" alt width="150" height="150" />
@@ -155,6 +155,22 @@ export default {
   },
   created() {},
   methods: {
+    getFormatDecimal(value) {
+          // Convierte la cadena a un número (si es posible)
+          const numericPrice = parseFloat(value);
+          if (isNaN(numericPrice)) {
+              // En caso de que la conversión no sea exitosa, maneja el error como desees
+              console.error('No se pudo convertir la cadena a un número.');
+              return value;
+          }
+          // Asumiendo que numericPrice es un número
+          const formattedPrice = numericPrice.toLocaleString('en-US', {
+              style: 'decimal',  // Estilo 'decimal' para separadores de mil y dos decimales
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+          });
+          return formattedPrice;
+    },
     viewImages(row) {
       this.recordImages.image_url = row.image_url;
       this.recordImages.image_url_medium = row.image_url_medium;
